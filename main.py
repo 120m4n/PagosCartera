@@ -9,7 +9,7 @@ class Cartera:
 
 
     def __str__(self):
-        return '{} {} {} {} {} {}'.format(self.codigocartera, self.codigoperiodo, self.montoperiodo, self.saldo, self.estadocartera, self.fechapago)
+        return '{:10} {:10} {:10} {:10} {:10} {}'.format(self.codigocartera, self.codigoperiodo, self.montoperiodo, self.saldo, self.estadocartera, self.fechapago)
 
     def getCodigoCartera(self):
         return self.codigocartera
@@ -55,7 +55,7 @@ class Pagos:
         self.montoperiodo = monto
     
     def __str__(self):
-        return '{} {} {} {}'.format(self.codigopago, self.codigoperiodo, self.monto, self.montoperiodo)
+        return '{:10} {:10} {:10} {:10}'.format(self.codigopago, self.codigoperiodo, self.monto, self.montoperiodo)
 
     def getCodigoPago(self):
         return self.codigopago
@@ -82,41 +82,55 @@ class Pagos:
     def setMontoPeriodo(self, monto):
         self.montoperiodo = monto
 
-c1 = Cartera(12345, 201501, 10000, 'A')
-c2 = Cartera(56421, 201502, 20000, 'A')
-c3 = Cartera(32345, 201503, 30100, 'A')
-c4 = Cartera(12453, 201504, 40300, 'A')
-c5 = Cartera(12454, 201505, 40700, 'A')
-c6 = Cartera(12455, 201506, 40300, 'A')
-c7 = Cartera(12456, 201507, 40500, 'A')
-c8 = Cartera(12457, 201508, 40700, 'A')
 
-p1 = Pagos(12345, 201601, 11230)
-p2 = Pagos(12545, 201701, 82730)
-p3 = Pagos(12645, 201705, 1530)
+c1 = Cartera(147742, 201612, 2869, 'A')
+c2 = Cartera(312884, 201702, 5264, 'A')
+c3 = Cartera(147740, 201703, 5308, 'A')
+c4 = Cartera(147739, 201704, 7043, 'A')
+c5 = Cartera(147733, 201711, 3511, 'A')
+c6 = Cartera(147732, 201712, 1064, 'A')
+c7 = Cartera(147696, 202012, 3726, 'A')
+c8 = Cartera(147695, 202101, 3750, 'A')
+c9 = Cartera(147691, 202105, 3563, 'A')
+
+
+p1 = Pagos(431836, 202112, 32535)
+
+
+
+
+
+
 # create a list of cateras
-listaCarteras = [c1, c2, c3, c4, c5, c6, c7, c8]
-listaPagos = [p1, p2, p3]
+listaCarteras = [c1, c2, c3, c4, c5, c6, c7, c8, c9]
+# create a list of pagos
+listaPagos = [p1]
+
 
 for p in listaPagos:
     for c in listaCarteras:
-        if c.getEstadoCartera() == 'A' or c.getEstadoCartera() == 'D':
-            if (c.getMontoPeriodo() - p.getMonto()) > 0:
-                c.setEstadoCartera('D')
-                c.setFechaPago(p.getCodigoPeriodo())
-                c.setSaldo(c.getMontoPeriodo() - p.getMonto())
-                p.setMonto(0)
-                break
+        if (c.getEstadoCartera() == 'A' or c.getEstadoCartera() == 'D'):
+            if p.getMonto() > 0:
+                if (c.getSaldo() - p.getMonto()) > 0:
+                    c.setEstadoCartera('D')
+                    c.setFechaPago(p.getCodigoPeriodo())
+                    c.setSaldo(c.getSaldo() - p.getMonto())
+                    p.setMonto(0)
+                    break
+                else:
+                    c.setEstadoCartera('P')
+                    c.setFechaPago(p.getCodigoPeriodo())
+                    p.setMonto(p.getMonto() - c.getSaldo())
+                    c.setSaldo(0)
             else:
-                c.setEstadoCartera('P')
-                c.setFechaPago(p.getCodigoPeriodo())
-                c.setSaldo(0)
-                p.setMonto(p.getMonto() - c.getMontoPeriodo())
-
+                break
 # print the list
 print('Carteras')
 for c in listaCarteras:
     print(c)
+
 print('Pagos')
+print('{:13} {:13} {:13} {:10}'.format(
+    'codigopago', 'periodo', 'saldo', 'montoperiodo'))
 for p in listaPagos:
     print(p)
